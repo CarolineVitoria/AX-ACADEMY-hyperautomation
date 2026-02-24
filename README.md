@@ -1,3 +1,3 @@
 # AX-ACADEMY-hyperautomation
-Repositório dos estudos e atividades
-Atualizando o readme pra atividade de git
+Repositório dos estudos e atividades  
+Criando branch e dando merge
