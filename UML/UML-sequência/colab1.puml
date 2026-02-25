@@ -1,0 +1,59 @@
+@startuml
+title Matricula
+actor Aluno
+boundary Portal
+control ServicoMatricula as SM
+entity Turma
+control Pagamento
+queue Log
+
+Aluno -> Portal : solicitarMatricula(listaDisc)
+Portal -> SM: iniciar(codAluno, listaDisc)
+
+
+loop para cada codigo da lista
+SM -> Turma: processarMatricula
+end
+
+par logsDeMatriculasBemSucedidas
+
+
+    SM -> Turma: verificaVagas()
+
+    alt vagasDisponiveis
+
+
+    Turma --> SM: ok
+
+    opt verificarTaxa
+    SM -> Pagamento: gerarCobranca (codAluno)
+    Pagamento --> SM: cobrancaID
+    SM --> Portal: cobrancaID
+    Portal --> Aluno: cobrancaID
+    Aluno -> Portal: fazerPagamento
+    Portal -> SM: verificaPagamento
+
+    alt PagamentoValidado
+    Pagamento --> SM: ok
+    Turma -> Log: registraMatriculasConcluidas
+    SM -> Turma: ReservarVaga(codAluno)
+    Turma --> SM: reservaConfirmada()
+    SM --> Portal: status = matriculaConfirmada
+
+    else PagamentoNãoValidado
+    Pagamento --> SM: Não validado
+    SM --> Portal:  pagamento não realizado, matricula impossibilitada
+    end
+
+    end
+
+    SM -> Turma: reservarVaga(codAluno)
+    Turma -> Log: registraMatriculasConcluidas
+    Turma --> SM: reservaConfirmada()
+    SM --> Portal: status = matriculaConfirmada
+
+    else semVaga 
+    Turma --> SM: Lotada
+    SM --> Portal: status = matriculaNegada
+    end
+end

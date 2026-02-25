@@ -1,0 +1,33 @@
+@startuml Processo de compra
+
+|User|
+start
+:Escolher produto;
+:Inserir CEP;
+
+|Sistema|
+:Calcular frete;
+
+|User|
+if (Deseja adcionar cupom?) then (sim)
+    :Inserir cupom;
+    |Sistema|
+    if (Cupom valido?) then (Sim)
+        :Aplicar desconto;
+    else (Não)
+        :Seguir sem desconto;
+    endif
+else (Não)
+endif
+
+:Calcular total final;
+
+|User|
+:Confirmar compra;
+|Sistema|
+:Registrar pedido;
+:Encerrar processo;
+
+
+
+stop

@@ -1,0 +1,14 @@
+Exercício sobre Diagrama de Sequência UML
+
+Utilize alguma ferramenta de modelagem UML (draw.io, plantUML, ou qualquer outra) para refazer o mesmo modelo de matrícula com:
+
+(a) loop (múltiplas disciplinas)
+(b) opt (taxa opcional)
+(c) par (log ou auditoria em paralelo com validação)
+
+Critérios de correção:
+(a) par usado apenas para tarefas independentes
+(b) diagrama com o máximo de legibilidade possível
+(c) se for o caso, pode modularizar com ref.
+
+Envie o arquivo PNG para o professor.
