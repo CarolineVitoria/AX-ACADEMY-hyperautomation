@@ -1,0 +1,758 @@
+<!doctype html>
+<html lang='pt-br'>
+<head>
+  <meta charset='utf-8' />
+  <meta name='viewport' content='width=device-width, initial-scale=1' />
+  <title>RPA Playground (PyAutoGUI)</title>
+  <style>
+    :root {
+      --bg: #f6f7fb;
+      --card: #ffffff;
+      --txt: #1b1f2a;
+      --muted: #5c657a;
+      --line: #e3e7f2;
+      --accent: #2b6cff;
+      --danger: #ff2d55;
+      --ok: #19c37d;
+      --shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+      --sans: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, 'Apple Color Emoji', 'Segoe UI Emoji';
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: var(--sans);
+      background: var(--bg);
+      color: var(--txt);
+      line-height: 1.25;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: #0b1220;
+      color: #fff;
+      padding: 14px 18px;
+      border-bottom: 3px solid #162340;
+    }
+
+    header .row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 999px;
+      font-size: 12px;
+      letter-spacing: 0.2px;
+    }
+
+    .wrap {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 18px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      padding: 16px;
+    }
+
+    h2 {
+      margin: 0 0 10px 0;
+      font-size: 18px;
+    }
+
+    p.small {
+      margin: 0 0 12px 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .form {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 10px 10px;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      background: #fff;
+      font-size: 14px;
+      outline: none;
+    }
+
+    textarea { min-height: 88px; resize: vertical; }
+
+    input:focus, textarea:focus, select:focus {
+      border-color: rgba(43, 108, 255, 0.55);
+      box-shadow: 0 0 0 4px rgba(43, 108, 255, 0.12);
+    }
+
+    .span2 { grid-column: span 2; }
+
+    .row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .btn {
+      user-select: none;
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 12px;
+      padding: 10px 12px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    .btn:hover { filter: brightness(0.98); }
+    .btn:active { transform: translateY(1px); }
+
+    /* Botão bem marcante para locateOnScreen */
+    .btn-hero {
+      border: 2px solid #0b1220;
+      background: linear-gradient(90deg, #ff2d55 0%, #2b6cff 50%, #19c37d 100%);
+      color: #0b1220;
+      font-weight: 900;
+      letter-spacing: 0.6px;
+      padding: 12px 14px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .hero-icon {
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      border: 2px solid #0b1220;
+      background:
+        repeating-linear-gradient(45deg,
+          rgba(255,255,255,0.9) 0px,
+          rgba(255,255,255,0.9) 4px,
+          rgba(0,0,0,0.1) 4px,
+          rgba(0,0,0,0.1) 8px);
+    }
+
+    .hint {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: #0b1220;
+      background: #f1f5ff;
+      border: 1px dashed rgba(43,108,255,0.45);
+      padding: 10px;
+      border-radius: 12px;
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .scrollbox {
+      height: 220px;
+      overflow-y: auto;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+      padding: 10px;
+      font-family: var(--mono);
+      font-size: 12px;
+      white-space: pre;
+    }
+
+    .hscroll {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+      overflow-x: auto;
+      overflow-y: hidden;
+      padding: 10px;
+    }
+
+    .wide {
+      width: 2200px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .tile {
+      width: 170px;
+      height: 64px;
+      border-radius: 14px;
+      border: 2px solid #0b1220;
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+      letter-spacing: 0.3px;
+    }
+
+    .t1 { background: #ff2d55; }
+    .t2 { background: #2b6cff; }
+    .t3 { background: #19c37d; }
+    .t4 { background: #ffd60a; }
+
+    table {
+      border-collapse: collapse;
+      width: 2000px;
+      font-size: 12px;
+    }
+    th, td {
+      border: 1px solid var(--line);
+      padding: 8px;
+      text-align: left;
+      white-space: nowrap;
+    }
+    th {
+      position: sticky;
+      top: 0;
+      background: #0b1220;
+      color: #fff;
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 200;
+    }
+
+    .modal {
+      width: min(680px, calc(100% - 24px));
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--line);
+      padding: 16px;
+    }
+
+    .modal .top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: #fff;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    footer {
+      color: var(--muted);
+      font-size: 12px;
+      padding: 10px 18px 28px 18px;
+      text-align: center;
+    }
+
+    @media (max-width: 860px) {
+      .form { grid-template-columns: 1fr; }
+      .span2 { grid-column: span 1; }
+      .split { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class='row'>
+    <div class='badge'>RPA Playground</div>
+    <div class='badge'>Tab entre campos</div>
+    <div class='badge'>Copiar/colar</div>
+    <div class='badge'>Scroll vertical e horizontal</div>
+    <div class='badge'>Botão marcante para locateOnScreen</div>
+  </div>
+</header>
+
+<div class='wrap'>
+  <div class='grid'>
+
+    <section class='card' id='sec-form'>
+      <h2>1) Formulário com muitos campos</h2>
+      <p class='small'>
+        Use Tab para navegar. Use clique para focar. Use Cmd+A, Cmd+C e Cmd+V para copiar e colar.
+      </p>
+
+      <div class='form'>
+
+        <div>
+          <label for='nome'>Nome</label>
+          <input id='nome' type='text' placeholder='Ex: Maria Silva' />
+        </div>
+
+        <div>
+          <label for='email'>Email</label>
+          <input id='email' type='email' placeholder='Ex: maria@exemplo.com' />
+        </div>
+
+        <div>
+          <label for='cpf'>CPF</label>
+          <input id='cpf' type='text' placeholder='000.000.000-00' />
+        </div>
+
+        <div>
+          <label for='telefone'>Telefone</label>
+          <input id='telefone' type='text' placeholder='(92) 99999-9999' />
+        </div>
+
+        <div class='span2'>
+          <label for='endereco'>Endereço</label>
+          <input id='endereco' type='text' placeholder='Rua, número, complemento' />
+        </div>
+
+        <div>
+          <label for='cidade'>Cidade</label>
+          <input id='cidade' type='text' placeholder='Manaus' />
+        </div>
+
+        <div>
+          <label for='estado'>Estado</label>
+          <select id='estado'>
+            <option value=''>Selecione</option>
+            <option>AM</option>
+            <option>PA</option>
+            <option>RR</option>
+            <option>RO</option>
+            <option>AC</option>
+          </select>
+        </div>
+
+        <div>
+          <label for='cep'>CEP</label>
+          <input id='cep' type='text' placeholder='00000-000' />
+        </div>
+
+        <div>
+          <label for='categoria'>Categoria</label>
+          <select id='categoria'>
+            <option value=''>Selecione</option>
+            <option>Cliente</option>
+            <option>Fornecedor</option>
+            <option>Parceiro</option>
+            <option>Aluno</option>
+          </select>
+        </div>
+
+        <div class='span2'>
+          <label for='obs'>Observações (textarea para treinar seleção e scroll dentro do campo)</label>
+          <textarea id='obs' placeholder='Cole aqui um texto longo...'></textarea>
+        </div>
+
+        <div class='span2'>
+          <div class='row'>
+            <label style='margin: 0;'>Opções clicáveis</label>
+            <span class='pill'><input id='ok' type='checkbox' /> <label for='ok' style='margin: 0;'>Confirmado</label></span>
+            <span class='pill'><input id='prio1' type='radio' name='prio' /> <label for='prio1' style='margin: 0;'>Prioridade baixa</label></span>
+            <span class='pill'><input id='prio2' type='radio' name='prio' /> <label for='prio2' style='margin: 0;'>Prioridade alta</label></span>
+            <a href='#' id='link-modal' style='margin-left: 6px;'>Abrir Pop-up</a>
+          </div>
+        </div>
+
+      </div>
+
+      <div style='margin-top: 12px;' class='row'>
+        <button class='btn' id='btn-preencher' type='button'>Preencher exemplo</button>
+        <button class='btn' id='btn-limpar' type='button'>Limpar tudo</button>
+
+        <!-- Botão chamativo para locateOnScreen -->
+        <button class='btn btn-hero' id='btn-enviar' type='button'>
+          <span class='hero-icon' aria-hidden='true'></span>
+          ENVIAR FORMULÁRIO
+        </button>
+      </div>
+
+      <!-- <div style='margin-top: 12px;' class='hint'>
+        Ideia de treino: clique no campo Nome → digite → Tab → digite → Tab... até Observações.
+        Depois: selecione o Email (Cmd+A) → copie (Cmd+C) → cole em Observações (Cmd+V).
+      </div> -->
+    </section>
+
+    <section class='card' id='sec-copy'>
+      <h2>2) Copiar de um campo e colar em outro (bem direto)</h2>
+      <p class='small'>
+        Aqui é legal para testar: clique no Campo A, digite algo, selecione tudo, copie, clique no Campo B e cole.
+      </p>
+
+      <div class='split'>
+        <div>
+          <label for='campoA'>Campo A</label>
+          <input id='campoA' type='text' placeholder='Digite aqui e copie' />
+        </div>
+        <div>
+          <label for='campoB'>Campo B</label>
+          <input id='campoB' type='text' placeholder='Cole aqui' />
+        </div>
+      </div>
+
+      <div style='margin-top: 12px;' class='row'>
+        <button class='btn' id='btn-copiar' type='button'>Copiar A → B (via JS)</button>
+        <button class='btn' id='btn-swap' type='button'>Trocar A ↔ B</button>
+      </div>
+
+      <!-- <div style='margin-top: 12px;' class='hint'>
+        Mesmo tendo botões, o treino principal aqui é via teclado: Cmd+A, Cmd+C, Cmd+V.
+      </div> -->
+    </section>
+
+    <section class='card' id='sec-vscroll'>
+      <h2>3) Scroll vertical (na página e dentro de uma caixa)</h2>
+      <p class='small'>
+        A caixa abaixo tem scroll próprio (overflow-y). Bom para testar pyautogui.scroll com o mouse em cima dela.
+      </p>
+
+      <div class='scrollbox' id='log'>
+Linha 001 - evento simulado
+Linha 002 - evento simulado
+Linha 003 - evento simulado
+Linha 004 - evento simulado
+Linha 005 - evento simulado
+Linha 006 - evento simulado
+Linha 007 - evento simulado
+Linha 008 - evento simulado
+Linha 009 - evento simulado
+Linha 010 - evento simulado
+Linha 011 - evento simulado
+Linha 012 - evento simulado
+Linha 013 - evento simulado
+Linha 014 - evento simulado
+Linha 015 - evento simulado
+Linha 016 - evento simulado
+Linha 017 - evento simulado
+Linha 018 - evento simulado
+Linha 019 - evento simulado
+Linha 020 - evento simulado
+Linha 021 - evento simulado
+Linha 022 - evento simulado
+Linha 023 - evento simulado
+Linha 024 - evento simulado
+Linha 025 - evento simulado
+Linha 026 - evento simulado
+Linha 027 - evento simulado
+Linha 028 - evento simulado
+Linha 029 - evento simulado
+Linha 030 - evento simulado
+Linha 031 - evento simulado
+Linha 032 - evento simulado
+Linha 033 - evento simulado
+Linha 034 - evento simulado
+Linha 035 - evento simulado
+Linha 036 - evento simulado
+Linha 037 - evento simulado
+Linha 038 - evento simulado
+Linha 039 - evento simulado
+Linha 040 - evento simulado
+Linha 041 - evento simulado
+Linha 042 - evento simulado
+Linha 043 - evento simulado
+Linha 044 - evento simulado
+Linha 045 - evento simulado
+Linha 046 - evento simulado
+Linha 047 - evento simulado
+Linha 048 - evento simulado
+Linha 049 - evento simulado
+Linha 050 - evento simulado
+Linha 051 - evento simulado
+Linha 052 - evento simulado
+Linha 053 - evento simulado
+Linha 054 - evento simulado
+Linha 055 - evento simulado
+Linha 056 - evento simulado
+Linha 057 - evento simulado
+Linha 058 - evento simulado
+Linha 059 - evento simulado
+Linha 060 - evento simulado
+Linha 061 - evento simulado
+Linha 062 - evento simulado
+Linha 063 - evento simulado
+Linha 064 - evento simulado
+Linha 065 - evento simulado
+Linha 066 - evento simulado
+Linha 067 - evento simulado
+Linha 068 - evento simulado
+Linha 069 - evento simulado
+Linha 070 - evento simulado
+Linha 071 - evento simulado
+Linha 072 - evento simulado
+Linha 073 - evento simulado
+Linha 074 - evento simulado
+Linha 075 - evento simulado
+Linha 076 - evento simulado
+Linha 077 - evento simulado
+Linha 078 - evento simulado
+Linha 079 - evento simulado
+Linha 080 - evento simulado
+Linha 081 - evento simulado
+Linha 082 - evento simulado
+Linha 083 - evento simulado
+Linha 084 - evento simulado
+Linha 085 - evento simulado
+Linha 086 - evento simulado
+Linha 087 - evento simulado
+Linha 088 - evento simulado
+Linha 089 - evento simulado
+Linha 090 - evento simulado
+Linha 091 - evento simulado
+Linha 092 - evento simulado
+Linha 093 - evento simulado
+Linha 094 - evento simulado
+Linha 095 - evento simulado
+Linha 096 - evento simulado
+Linha 097 - evento simulado
+Linha 098 - evento simulado
+Linha 099 - evento simulado
+Linha 100 - evento simulado
+Linha 101 - evento simulado
+Linha 102 - evento simulado
+Linha 103 - evento simulado
+Linha 104 - evento simulado
+Linha 105 - evento simulado
+Linha 106 - evento simulado
+Linha 107 - evento simulado
+Linha 108 - evento simulado
+Linha 109 - evento simulado
+Linha 110 - evento simulado
+Linha 111 - evento simulado
+Linha 112 - evento simulado
+Linha 113 - evento simulado
+Linha 114 - evento simulado
+Linha 115 - evento simulado
+Linha 116 - evento simulado
+Linha 117 - evento simulado
+Linha 118 - evento simulado
+Linha 119 - evento simulado
+Linha 120 - evento simulado
+      </div>
+    </section>
+
+    <section class='card' id='sec-hscroll'>
+      <h2>4) Scroll horizontal (área com overflow-x)</h2>
+      <p class='small'>
+        Coloque o mouse em cima da área e teste hscroll (ou arraste a barra horizontal).
+      </p>
+
+      <div class='hscroll' id='faixa'>
+        <div class='wide'>
+          <div class='tile t1'>A1</div>
+          <div class='tile t2'>B2</div>
+          <div class='tile t3'>C3</div>
+          <div class='tile t4'>D4</div>
+          <div class='tile t1'>E5</div>
+          <div class='tile t2'>F6</div>
+          <div class='tile t3'>G7</div>
+          <div class='tile t4'>H8</div>
+          <div class='tile t1'>I9</div>
+          <div class='tile t2'>J10</div>
+          <div class='tile t3'>K11</div>
+          <div class='tile t4'>L12</div>
+        </div>
+      </div>
+
+      <div style='height: 12px;'></div>
+
+      <p class='small'>
+        E aqui uma tabela bem larga, também com scroll horizontal:
+      </p>
+
+      <div class='hscroll' style='max-height: 260px; overflow-y: auto;'>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Campo 01</th><th>Campo 02</th><th>Campo 03</th><th>Campo 04</th><th>Campo 05</th>
+              <th>Campo 06</th><th>Campo 07</th><th>Campo 08</th><th>Campo 09</th><th>Campo 10</th>
+              <th>Campo 11</th><th>Campo 12</th><th>Campo 13</th><th>Campo 14</th><th>Campo 15</th>
+              <th>Campo 16</th><th>Campo 17</th><th>Campo 18</th><th>Campo 19</th><th>Campo 20</th>
+            </tr>
+          </thead>
+          <tbody id='tbody'></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class='card'>
+      <h2>5) Espaço extra para você rolar a página</h2>
+      <p class='small'>
+        A intenção é a página ficar comprida o bastante para você testar scroll vertical do documento todo.
+      </p>
+      <!-- <div class='hint' style='margin-bottom: 10px;'>
+        Treino: role até o topo → role até o fim → volte e clique em ENVIAR FORMULÁRIO.
+      </div> -->
+      <div class='row'>
+        <a href='#sec-form'>Voltar para o formulário</a>
+        <span style='color: var(--muted);'>|</span>
+        <a href='#sec-hscroll'>Ir para scroll horizontal</a>
+      </div>
+
+      <div style='height: 780px;'></div>
+    </section>
+
+  </div>
+</div>
+
+<footer>
+  Playground local para automação com PyAutoGUI.
+</footer>
+
+<!-- Modal -->
+<div class='modal-backdrop' id='backdrop' role='dialog' aria-modal='true'>
+  <div class='modal'>
+    <div class='top'>
+      <h2 style='margin: 0;'>Pop-up de teste</h2>
+      <button class='btn' id='btn-fechar' type='button'>Fechar</button>
+    </div>
+
+    <p class='small' style='margin-top: 10px;'>
+      Bom para treinar clique em elemento que aparece e depois some.
+    </p>
+
+    <div class='form'>
+      <div>
+        <label for='modal1'>Campo 1</label>
+        <input id='modal1' type='text' placeholder='Digite aqui' />
+      </div>
+      <div>
+        <label for='modal2'>Campo 2</label>
+        <input id='modal2' type='text' placeholder='Digite aqui' />
+      </div>
+      <div class='span2'>
+        <label for='modal3'>Notas</label>
+        <textarea id='modal3' placeholder='Treino de seleção e colagem'></textarea>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function setVal(id, v) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.value = v;
+  }
+
+  function openModal() {
+    document.getElementById('backdrop').style.display = 'flex';
+    setTimeout(function () {
+      document.getElementById('modal1').focus();
+    }, 50);
+  }
+
+  function closeModal() {
+    document.getElementById('backdrop').style.display = 'none';
+  }
+
+  document.getElementById('link-modal').addEventListener('click', function (e) {
+    e.preventDefault();
+    openModal();
+  });
+
+  document.getElementById('btn-fechar').addEventListener('click', function () {
+    closeModal();
+  });
+
+  document.getElementById('backdrop').addEventListener('click', function (e) {
+    if (e.target && e.target.id === 'backdrop') closeModal();
+  });
+
+  document.getElementById('btn-preencher').addEventListener('click', function () {
+    setVal('nome', 'Maria Silva');
+    setVal('email', 'maria.silva@exemplo.com');
+    setVal('cpf', '123.456.789-00');
+    setVal('telefone', '(92) 99999-9999');
+    setVal('endereco', 'Av. Exemplo, 123, Centro');
+    setVal('cidade', 'Manaus');
+    setVal('cep', '69000-000');
+    setVal('obs', 'Texto longo para treinar seleção, copiar e colar.\\n\\nLinha 2...\\nLinha 3...');
+    document.getElementById('estado').value = 'AM';
+    document.getElementById('categoria').value = 'Aluno';
+    document.getElementById('ok').checked = true;
+    document.getElementById('prio2').checked = true;
+  });
+
+  document.getElementById('btn-limpar').addEventListener('click', function () {
+    var ids = ['nome','email','cpf','telefone','endereco','cidade','cep','obs','campoA','campoB','modal1','modal2','modal3'];
+    ids.forEach(function (id) { setVal(id, ''); });
+    document.getElementById('estado').value = '';
+    document.getElementById('categoria').value = '';
+    document.getElementById('ok').checked = false;
+    document.getElementById('prio1').checked = false;
+    document.getElementById('prio2').checked = false;
+  });
+
+  document.getElementById('btn-copiar').addEventListener('click', function () {
+    setVal('campoB', document.getElementById('campoA').value);
+  });
+
+  document.getElementById('btn-swap').addEventListener('click', function () {
+    var a = document.getElementById('campoA').value;
+    var b = document.getElementById('campoB').value;
+    setVal('campoA', b);
+    setVal('campoB', a);
+  });
+
+  document.getElementById('btn-enviar').addEventListener('click', function () {
+    alert('Clique detectado. Aqui você pode treinar localizar o botão e clicar com o bot.');
+  });
+
+  // Preenche a tabela larga
+  (function () {
+    var tbody = document.getElementById('tbody');
+    var html = '';
+    for (var i = 1; i <= 24; i++) {
+      html += '<tr>';
+      html += '<td>' + i + '</td>';
+      for (var c = 1; c <= 20; c++) {
+        html += '<td>R' + i + 'C' + (c < 10 ? '0' + c : c) + '</td>';
+      }
+      html += '</tr>';
+    }
+    tbody.innerHTML = html;
+  })();
+</script>
+
+</body>
+</html>
