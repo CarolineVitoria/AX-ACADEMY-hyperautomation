@@ -1,0 +1,17 @@
+id,data,valor,taxa,total,total_calc,taxa_valida,motivo
+1,2026-02-01,335.24,0.05,364.0,352.0,True,total_diverge; 
+10,2026-02-10,248.04,0.05,265.44,260.44,True,total_diverge; 
+24,2026-02-24,362.33,0.15,409.68,416.68,True,total_diverge; 
+28,2026-02-28,16.93,0.05,10.780000000000001,17.78,True,total_diverge; 
+55,2026-03-27,189.41,0.1,213.35,208.35,True,total_diverge; 
+64,2026-04-05,335.96,,369.56,335.96,False,taxa_faltando; total_diverge; 
+73,2026-04-14,208.69,,229.56,208.69,False,taxa_faltando; total_diverge; 
+99,2026-05-10,172.63,,189.89,172.63,False,taxa_faltando; total_diverge; 
+101,2026-05-12,130.84,,143.92,130.84,False,taxa_faltando; total_diverge; 
+104,2026-05-15,84.55,0.1,98.01,93.01,True,total_diverge; 
+136,2026-06-16,53.41,,58.75,53.41,False,taxa_faltando; total_diverge; 
+141,2026-06-21,143.12,0.05,162.28,150.28,True,total_diverge; 
+165,2026-07-15,238.11,0.15,285.83,273.83,True,total_diverge; 
+166,2026-07-16,288.98,0.15,344.33,332.33,True,total_diverge; 
+175,2026-07-25,124.78,0.1,130.26,137.26,True,total_diverge; 
+185,2026-08-04,209.32,,219.79,209.32,False,taxa_faltando; total_diverge; 
