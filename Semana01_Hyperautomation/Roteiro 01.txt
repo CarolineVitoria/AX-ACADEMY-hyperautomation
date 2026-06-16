@@ -1,0 +1,21 @@
+Roteiro 01
+1 - Objetivo do processo de cadastro: Salvar os dados do usuário e assim permitir monitorar o status do usuário.
+2 - Como funciona o processo atualmente (AS-IS): 
+1- O usuário entra no portal
+2- Tem a opção de cadastrar um novo usuário, exportar os dados dos usuários já existentes, importar  novos dados ou zerar a base.
+3- Caso escolha importar, o sistema só aceita arquivo csv.
+4 - O sistema faz a validação dos dados, aceitando apenas array de json.
+5 - O sistema expõe os dados na interface caso os campos dos objetos json sejam os esperados pelo sistema.
+
+3- Como esse processo  poderia ser melhorado: Login para acessar o portal, funções mais críticas como "zerar base" apenas para ADMS do sitema.
+
+4- Qual o volume do processo: A quantidade varia de acordo com a demanda do site.
+
+5- Sobre a frequência: Novamente depende da demanda, se o sistema permitisse a mudança de status a demanada e o acesso seria maior, mas provavelmente a demanda é diária.
+
+6- Regras de negócio:
+Nome, sobrenome, cpf e email obrigatórios. Além disso há um padrão mínimo para aceitar os dados em cpf, q exige apenas números e somente 11, e o email q exige ao menos o @ e o ".com"
+
+7- O processo é viável para automação: Sim, os processos são super repetitivos, fáceis de ser mapeados e aplicados a um bot.
+
+8- Existe ROI? Sim, pois a utilização desse portal não requer um humano para operar, dessa forma há economia de tempo e de mão de obra.
