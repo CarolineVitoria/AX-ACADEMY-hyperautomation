@@ -1,0 +1,8 @@
+-r requirements.txt
+
+# Testes automatizados
+pytest==8.3.3
+pytest-mock==3.14.0
+
+# Geração de PDFs de exemplo usados pelos testes automatizados
+reportlab==4.2.5

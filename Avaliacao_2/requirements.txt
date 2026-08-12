@@ -1,0 +1,12 @@
+# Automação de navegador
+playwright==1.47.0
+
+# Manipulação de planilhas (.xlsx)
+openpyxl==3.1.5
+
+# Extração de dados de PDFs
+pdfplumber==0.11.4
+PyPDF2==3.0.1
+
+# Variáveis de ambiente (.env)
+python-dotenv==1.0.1

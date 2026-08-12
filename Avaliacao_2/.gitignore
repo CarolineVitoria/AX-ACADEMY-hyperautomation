@@ -1,0 +1,33 @@
+# Ambiente virtual
+venv/
+.venv/
+
+# Variáveis de ambiente com credenciais
+.env
+
+# Sessão de login salva (cookies) — nunca deve ser versionada
+src/arquivos_auxiliares/auth_state.json
+
+# Cache Python
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Playwright
+playwright-report/
+test-results/
+
+# Arquivos e downloads temporários gerados em tempo de execução
+src/arquivos_auxiliares/downloads_temp/*
+!src/arquivos_auxiliares/downloads_temp/.gitkeep
+logs/
+*.log
+
+# PDFs de exemplo gerados pelo script auxiliar (regeneráveis)
+src/arquivos_auxiliares/documentos_exemplo/
+
+# Documentos processados (dados de clientes não devem ser versionados)
+Projeto_Automacao/Documentos_OK/*
+Projeto_Automacao/Documentos_Pendentes/*
+!Projeto_Automacao/Documentos_OK/.gitkeep
+!Projeto_Automacao/Documentos_Pendentes/.gitkeep

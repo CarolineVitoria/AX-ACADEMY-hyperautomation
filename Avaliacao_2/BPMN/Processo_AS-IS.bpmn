@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL"
+                    xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+                    xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+                    xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+                    id="Definitions_ASIS"
+                    targetNamespace="http://ax-academy.local/portal-fake/asis">
+
+  <bpmn2:process id="Processo_ASIS" name="Cadastro de Clientes - Portal Fake (AS-IS / Manual)" isExecutable="false">
+
+    <bpmn2:laneSet id="LaneSet_ASIS">
+      <bpmn2:lane id="Lane_Colaborador" name="Colaborador (Portal Fake)">
+        <bpmn2:flowNodeRef>StartEvent_1</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>Task_AcessarCaixa</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>Task_BaixarAnexos</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>Task_ConferirDocs</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>Gateway_DocOk</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>Task_ExtrairDados</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>Task_PreencherPlanilha</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>Task_ResponderAprovado</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>EndEvent_Aprovado</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>Task_SepararPendentes</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>Task_ResponderPendente</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>EndEvent_Pendente</bpmn2:flowNodeRef>
+      </bpmn2:lane>
+    </bpmn2:laneSet>
+
+    <bpmn2:startEvent id="StartEvent_1" name="Nova solicitação recebida por e-mail">
+      <bpmn2:outgoing>Flow_1</bpmn2:outgoing>
+    </bpmn2:startEvent>
+
+    <bpmn2:task id="Task_AcessarCaixa" name="Acessar caixa de e-mail e identificar solicitação">
+      <bpmn2:incoming>Flow_1</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_2</bpmn2:outgoing>
+    </bpmn2:task>
+
+    <bpmn2:task id="Task_BaixarAnexos" name="Baixar documentos anexados">
+      <bpmn2:incoming>Flow_2</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_3</bpmn2:outgoing>
+    </bpmn2:task>
+
+    <bpmn2:task id="Task_ConferirDocs" name="Conferir documentação (nome, CPF, nascimento, endereço)">
+      <bpmn2:incoming>Flow_3</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_4</bpmn2:outgoing>
+    </bpmn2:task>
+
+    <bpmn2:exclusiveGateway id="Gateway_DocOk" name="Documentação completa e válida?">
+      <bpmn2:incoming>Flow_4</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_Sim</bpmn2:outgoing>
+      <bpmn2:outgoing>Flow_Nao</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+
+    <bpmn2:task id="Task_ExtrairDados" name="Extrair dados da ficha de cadastro">
+      <bpmn2:incoming>Flow_Sim</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_5</bpmn2:outgoing>
+    </bpmn2:task>
+
+    <bpmn2:task id="Task_PreencherPlanilha" name="Preencher Planilha Mestra manualmente">
+      <bpmn2:incoming>Flow_5</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_6</bpmn2:outgoing>
+    </bpmn2:task>
+
+    <bpmn2:task id="Task_ResponderAprovado" name="Responder cliente informando aprovação">
+      <bpmn2:incoming>Flow_6</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_7</bpmn2:outgoing>
+    </bpmn2:task>
+
+    <bpmn2:endEvent id="EndEvent_Aprovado" name="Cadastro aprovado">
+      <bpmn2:incoming>Flow_7</bpmn2:incoming>
+    </bpmn2:endEvent>
+
+    <bpmn2:task id="Task_SepararPendentes" name="Separar arquivos como pendentes">
+      <bpmn2:incoming>Flow_Nao</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_8</bpmn2:outgoing>
+    </bpmn2:task>
+
+    <bpmn2:task id="Task_ResponderPendente" name="Responder cliente informando pendência">
+      <bpmn2:incoming>Flow_8</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_9</bpmn2:outgoing>
+    </bpmn2:task>
+
+    <bpmn2:endEvent id="EndEvent_Pendente" name="Cadastro pendente">
+      <bpmn2:incoming>Flow_9</bpmn2:incoming>
+    </bpmn2:endEvent>
+
+    <bpmn2:sequenceFlow id="Flow_1" sourceRef="StartEvent_1" targetRef="Task_AcessarCaixa"/>
+    <bpmn2:sequenceFlow id="Flow_2" sourceRef="Task_AcessarCaixa" targetRef="Task_BaixarAnexos"/>
+    <bpmn2:sequenceFlow id="Flow_3" sourceRef="Task_BaixarAnexos" targetRef="Task_ConferirDocs"/>
+    <bpmn2:sequenceFlow id="Flow_4" sourceRef="Task_ConferirDocs" targetRef="Gateway_DocOk"/>
+    <bpmn2:sequenceFlow id="Flow_Sim" name="Sim" sourceRef="Gateway_DocOk" targetRef="Task_ExtrairDados"/>
+    <bpmn2:sequenceFlow id="Flow_Nao" name="Não" sourceRef="Gateway_DocOk" targetRef="Task_SepararPendentes"/>
+    <bpmn2:sequenceFlow id="Flow_5" sourceRef="Task_ExtrairDados" targetRef="Task_PreencherPlanilha"/>
+    <bpmn2:sequenceFlow id="Flow_6" sourceRef="Task_PreencherPlanilha" targetRef="Task_ResponderAprovado"/>
+    <bpmn2:sequenceFlow id="Flow_7" sourceRef="Task_ResponderAprovado" targetRef="EndEvent_Aprovado"/>
+    <bpmn2:sequenceFlow id="Flow_8" sourceRef="Task_SepararPendentes" targetRef="Task_ResponderPendente"/>
+    <bpmn2:sequenceFlow id="Flow_9" sourceRef="Task_ResponderPendente" targetRef="EndEvent_Pendente"/>
+
+  </bpmn2:process>
+
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Processo_ASIS">
+
+      <bpmndi:BPMNShape id="Lane_Colaborador_di" bpmnElement="Lane_Colaborador" isHorizontal="true">
+        <dc:Bounds x="90" y="40" width="1500" height="360"/>
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="StartEvent_1_di" bpmnElement="StartEvent_1">
+        <dc:Bounds x="130" y="182" width="36" height="36"/>
+        <bpmndi:BPMNLabel><dc:Bounds x="108" y="222" width="82" height="40"/></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="Task_AcessarCaixa_di" bpmnElement="Task_AcessarCaixa">
+        <dc:Bounds x="220" y="160" width="120" height="80"/>
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="Task_BaixarAnexos_di" bpmnElement="Task_BaixarAnexos">
+        <dc:Bounds x="390" y="160" width="120" height="80"/>
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="Task_ConferirDocs_di" bpmnElement="Task_ConferirDocs">
+        <dc:Bounds x="560" y="160" width="120" height="80"/>
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="Gateway_DocOk_di" bpmnElement="Gateway_DocOk" isMarkerVisible="true">
+        <dc:Bounds x="730" y="175" width="50" height="50"/>
+        <bpmndi:BPMNLabel><dc:Bounds x="705" y="228" width="100" height="40"/></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="Task_ExtrairDados_di" bpmnElement="Task_ExtrairDados">
+        <dc:Bounds x="840" y="70" width="120" height="80"/>
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="Task_PreencherPlanilha_di" bpmnElement="Task_PreencherPlanilha">
+        <dc:Bounds x="1010" y="70" width="120" height="80"/>
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="Task_ResponderAprovado_di" bpmnElement="Task_ResponderAprovado">
+        <dc:Bounds x="1180" y="70" width="120" height="80"/>
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="EndEvent_Aprovado_di" bpmnElement="EndEvent_Aprovado">
+        <dc:Bounds x="1352" y="92" width="36" height="36"/>
+        <bpmndi:BPMNLabel><dc:Bounds x="1330" y="132" width="80" height="27"/></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="Task_SepararPendentes_di" bpmnElement="Task_SepararPendentes">
+        <dc:Bounds x="840" y="280" width="120" height="80"/>
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="Task_ResponderPendente_di" bpmnElement="Task_ResponderPendente">
+        <dc:Bounds x="1010" y="280" width="120" height="80"/>
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="EndEvent_Pendente_di" bpmnElement="EndEvent_Pendente">
+        <dc:Bounds x="1182" y="302" width="36" height="36"/>
+        <bpmndi:BPMNLabel><dc:Bounds x="1160" y="342" width="80" height="27"/></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNEdge id="Flow_1_di" bpmnElement="Flow_1">
+        <di:waypoint x="166" y="200"/><di:waypoint x="220" y="200"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_2_di" bpmnElement="Flow_2">
+        <di:waypoint x="340" y="200"/><di:waypoint x="390" y="200"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_3_di" bpmnElement="Flow_3">
+        <di:waypoint x="510" y="200"/><di:waypoint x="560" y="200"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_4_di" bpmnElement="Flow_4">
+        <di:waypoint x="680" y="200"/><di:waypoint x="730" y="200"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Sim_di" bpmnElement="Flow_Sim">
+        <di:waypoint x="755" y="175"/><di:waypoint x="755" y="110"/><di:waypoint x="840" y="110"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Nao_di" bpmnElement="Flow_Nao">
+        <di:waypoint x="755" y="225"/><di:waypoint x="755" y="320"/><di:waypoint x="840" y="320"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_5_di" bpmnElement="Flow_5">
+        <di:waypoint x="960" y="110"/><di:waypoint x="1010" y="110"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_6_di" bpmnElement="Flow_6">
+        <di:waypoint x="1130" y="110"/><di:waypoint x="1180" y="110"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_7_di" bpmnElement="Flow_7">
+        <di:waypoint x="1300" y="110"/><di:waypoint x="1352" y="110"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_8_di" bpmnElement="Flow_8">
+        <di:waypoint x="960" y="320"/><di:waypoint x="1010" y="320"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_9_di" bpmnElement="Flow_9">
+        <di:waypoint x="1130" y="320"/><di:waypoint x="1182" y="320"/>
+      </bpmndi:BPMNEdge>
+
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+
+</bpmn2:definitions>
